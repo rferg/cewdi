@@ -2,18 +2,29 @@
   "name": "cewdi",
   "version": "1.0.0",
   "description": "",
+  "keywords": [],
+  "author": "Ryan Ferguson",
+  "license": "ISC",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "npm run lint && karma start --auto-watch",
+    "build": "tsc",
+    "lint": "tslint --format stylish --project tsconfig.json"
+  },
   "dependencies": {
     "reflect-metadata": "^0.1.13"
   },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "watch": "tsc -w"
-  },
-  "keywords": [],
-  "author": "Ryan Ferguson",
-  "license": "ISC"
+  "devDependencies": {
+    "@types/jasmine": "^3.5.1",
+    "jasmine-core": "^3.5.0",
+    "karma": "^4.4.1",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-jasmine": "^3.1.0",
+    "karma-spec-reporter": "0.0.32",
+    "karma-typescript": "^4.1.1",
+    "tslint": "^5.20.1",
+    "tslint-config-standard-plus": "^2.3.0",
+    "typescript": "^3.7.5"
+  }
 }
