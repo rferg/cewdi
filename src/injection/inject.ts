@@ -1,8 +1,8 @@
 import { InjectionToken } from './injection-token'
-import { PARAMETER_INJECTION_TOKENS_METADATA } from './parameter-injection-tokens-metadata'
+import { parameterInjectionTokensMetadataKey } from './parameter-injection-tokens-metadata-key'
 
 /**
- * A parameter decorator used to define an injection token
+ * Returns a parameter decorator used to define an injection token
  * to be exchanged for a value in a class constructor.
  *
  * ```ts
@@ -14,10 +14,11 @@ import { PARAMETER_INJECTION_TOKENS_METADATA } from './parameter-injection-token
  */
 export const Inject = (token: InjectionToken): ParameterDecorator => {
   return (target: Object, _: string | symbol, parameterIndex: number) => {
-    if (!Reflect.hasOwnMetadata(PARAMETER_INJECTION_TOKENS_METADATA, target)) {
-      Reflect.defineMetadata(PARAMETER_INJECTION_TOKENS_METADATA, {}, target)
+    let metadata: InjectionToken[] = Reflect.getOwnMetadata(parameterInjectionTokensMetadataKey, target)
+    if (!metadata) {
+      metadata = new Array((target as Function).length)
     }
-    const metadata = Reflect.getOwnMetadata(PARAMETER_INJECTION_TOKENS_METADATA, target)
     metadata[parameterIndex] = token
+    Reflect.defineMetadata(parameterInjectionTokensMetadataKey, metadata, target)
   }
 }
