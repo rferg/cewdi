@@ -1,6 +1,6 @@
 import { ClassType } from '../common'
 import { Lifetime } from './lifetime'
-import { InjectionToken } from '../injection'
+import { InjectionToken } from './injection-token'
 
 /**
  * Defines a token-to-value exchange.

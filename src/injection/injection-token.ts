@@ -1,7 +1,8 @@
 /**
  * Represents a token to be exchanged with a value when injected.
  */
-export class InjectionToken<_> {
+// tslint:disable-next-line:no-any
+export class InjectionToken<_ = any> {
   /**
    * The description of the token
    */
