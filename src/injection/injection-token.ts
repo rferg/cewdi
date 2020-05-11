@@ -1,7 +1,7 @@
 /**
  * Represents a token to be exchanged with a value when injected.
  */
-export class InjectionToken {
+export class InjectionToken<_> {
   /**
    * The description of the token
    */
