@@ -1,5 +1,6 @@
 export * from './class-type-token'
 export * from './inject'
+export * from './injectable'
 export * from './injector'
 export * from './injection-token'
 export * from './parameter-injection-tokens-metadata-key'

@@ -20,7 +20,7 @@ describe('Inject', () => {
 
     inject(target, '_prop1', parameterIndex)
 
-    const metadata: InjectionToken[] = Reflect.getOwnMetadata(parameterInjectionTokensMetadataKey, target)
+    const metadata: InjectionToken[] = Reflect.getMetadata(parameterInjectionTokensMetadataKey, target)
 
     expect(metadata).toBeDefined()
     expect(metadata.length).toBe(TestClass.length)
@@ -38,7 +38,7 @@ describe('Inject', () => {
       inject(target, '', index)
     }
 
-    const metadata: InjectionToken[] = Reflect.getOwnMetadata(parameterInjectionTokensMetadataKey, target)
+    const metadata: InjectionToken[] = Reflect.getMetadata(parameterInjectionTokensMetadataKey, target)
 
     expect(metadata).toEqual(tokens)
   })

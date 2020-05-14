@@ -14,7 +14,7 @@ import { parameterInjectionTokensMetadataKey } from './parameter-injection-token
  */
 export const Inject = (token: InjectionToken): ParameterDecorator => {
   return (target: Object, _: string | symbol, parameterIndex: number) => {
-    let metadata: InjectionToken[] = Reflect.getOwnMetadata(parameterInjectionTokensMetadataKey, target)
+    let metadata: InjectionToken[] = Reflect.getMetadata(parameterInjectionTokensMetadataKey, target)
     if (!metadata) {
       metadata = new Array((target as Function).length)
     }
