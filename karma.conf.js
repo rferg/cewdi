@@ -23,6 +23,6 @@ module.exports = (config) => {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome']
+    browsers: ['ChromeHeadless']
   })
 }
