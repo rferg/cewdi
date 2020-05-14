@@ -2,6 +2,7 @@
     "extends": "tslint-config-standard-plus",
     "rules": {
         "space-before-function-paren":false,
-        "arrow-parens": false
+        "arrow-parens": false,
+        "no-empty": false
     }
 }

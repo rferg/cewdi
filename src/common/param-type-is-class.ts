@@ -4,5 +4,5 @@
  */
 export function paramTypeIsClass(type: Function): boolean {
   return type instanceof Function
-    && [ 'Number', 'String', 'Boolean', 'Object' ].indexOf(type.name) === -1
+    && [ 'Number', 'String', 'Boolean', 'Object', 'Function' ].indexOf(type.name) === -1
 }
