@@ -3,6 +3,7 @@
     "rules": {
         "space-before-function-paren":false,
         "arrow-parens": false,
-        "no-empty": false
+        "no-empty": false,
+        "no-any": false
     }
 }

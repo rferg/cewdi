@@ -7,6 +7,13 @@ export class InjectionToken<_ = any> {
    * The description of the token
    */
   description: string
+  /**
+   * Gets the (probably) unique ID for the injection token
+   */
+  get id(): string {
+    return this._id
+  }
+  private readonly _id: string
 
   /**
    * Creates an {@link InjectionToken} instance
@@ -14,5 +21,6 @@ export class InjectionToken<_ = any> {
    */
   constructor(description: string) {
     this.description = description || ''
+    this._id = '_' + Math.random().toString(36).substr(2, 9)
   }
 }
