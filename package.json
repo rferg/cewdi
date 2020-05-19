@@ -1,6 +1,6 @@
 {
   "name": "cewdi",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Custom Elements with dependency injection",
   "keywords": [
     "custom elements",
@@ -9,13 +9,16 @@
   ],
   "author": "Ryan Ferguson",
   "license": "ISC",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "files": [
+    "/dist/src"
+  ],
   "scripts": {
     "test": "npm run lint && karma start --auto-watch",
     "build": "tsc",
     "lint": "tslint --format stylish --project tsconfig.json",
-    "prepare": "npm run lint && karma start --single-run && npm run build"
+    "prepublishOnly": "npm run lint && karma start --single-run && npm run build"
   },
   "dependencies": {
     "reflect-metadata": "^0.1.13"
