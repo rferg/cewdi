@@ -1,8 +1,12 @@
 {
   "name": "cewdi",
-  "version": "1.0.0",
-  "description": "",
-  "keywords": [],
+  "version": "0.1.0",
+  "description": "Custom Elements with dependency injection",
+  "keywords": [
+    "custom elements",
+    "dependency injection",
+    "ioc"
+  ],
   "author": "Ryan Ferguson",
   "license": "ISC",
   "main": "dist/index.js",
@@ -10,7 +14,8 @@
   "scripts": {
     "test": "npm run lint && karma start --auto-watch",
     "build": "tsc",
-    "lint": "tslint --format stylish --project tsconfig.json"
+    "lint": "tslint --format stylish --project tsconfig.json",
+    "prepare": "npm run lint && karma start --single-run && npm run build"
   },
   "dependencies": {
     "reflect-metadata": "^0.1.13"
