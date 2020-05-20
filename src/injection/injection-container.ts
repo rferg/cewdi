@@ -2,18 +2,21 @@ import { Injector } from './injector'
 import { Provider } from './provider'
 import { InjectionToken } from './injection-token'
 
+type InjectorFactory = (providers: Provider[]) => Injector
 /**
  * Dependency injection container
  */
 export class InjectionContainer {
+  private readonly injectorFactory: InjectorFactory
   private readonly injector: Injector
 
   /**
    * Creates new instance InjectionContainer instance
    * @param injector the dependency injector
    */
-  protected constructor(injector: Injector) {
-    this.injector = injector
+  protected constructor(providers: Provider[], injectorFactory: InjectorFactory) {
+    this.injectorFactory = injectorFactory
+    this.injector = this.injectorFactory(providers)
   }
 
   /**
@@ -21,7 +24,7 @@ export class InjectionContainer {
    * @param providers array of token-to-value exchange definitions
    */
   static create(providers: Provider[]): InjectionContainer {
-    return new InjectionContainer(new Injector(providers || []))
+    return new InjectionContainer(providers, (providers: Provider[]) => new Injector(providers || []))
   }
 
   /**
@@ -30,5 +33,19 @@ export class InjectionContainer {
    */
   resolve<T>(injectionToken: InjectionToken<T>): T {
     return this.injector.resolve(injectionToken)
+  }
+
+  /**
+   * Creates a new InjectionContainer that has
+   * access to all of the providers of this container,
+   * but also some additional providers
+   * @param providers the additional providers for the child container
+   */
+  createChildContainer(providers: Provider[]): InjectionContainer {
+    return new InjectionContainer(providers, (childProviders: Provider[]) => {
+      const childInjector = this.injectorFactory(childProviders)
+      childInjector.addVertices(this.injector.vertices)
+      return childInjector
+    })
   }
 }

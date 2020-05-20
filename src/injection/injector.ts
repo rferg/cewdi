@@ -2,29 +2,10 @@ import { Provider } from './provider'
 import { InjectionToken } from './injection-token'
 import { ExplicitProvider } from './explicit-provider'
 import { parameterInjectionTokensMetadataKey } from './parameter-injection-tokens-metadata-key'
-import { ClassTypeToken } from './class-type-token'
 import { ClassType } from '../common'
 import { Lifetime } from './lifetime'
 import { ClassTypeProvider } from './class-type-provider'
-
-class ProviderVertex {
-  provider: Provider
-  instance: any
-  get token(): InjectionToken {
-    return this.provider instanceof ExplicitProvider
-      ? this.provider.token
-      : new ClassTypeToken(this.provider as ClassType<object>, this.provider.name)
-  }
-  get lifetime(): Lifetime {
-    return this.provider instanceof ExplicitProvider
-      ? this.provider.lifetime
-      : Lifetime.Singleton
-  }
-
-  constructor(provider: Provider) {
-    this.provider = provider
-  }
-}
+import { ProviderVertex } from './provider-vertex'
 
 class ProviderGraph {
   /**
@@ -43,11 +24,34 @@ export class Injector {
   private readonly topSortCache: Map<string, string[]> = new Map<string, string[]>()
 
   /**
+   * Gets the provider vertices from this Injector's graph
+   */
+  get vertices(): ProviderVertex[] {
+    return this.graph.vertices || []
+  }
+
+  /**
    * Create an Injector instance
    * @param providers the token-value exchange definitions
    */
   constructor(providers: Provider[]) {
-    this.populateGraph(providers)
+    this.addVertices((providers || []).map(provider => new ProviderVertex(provider)))
+  }
+
+  /**
+   * Add providers from existing Injector's graph
+   * @param vertices the provider vertices to add
+   */
+  addVertices(vertices: ProviderVertex[]): void {
+    if (!this.graph.vertices) { this.graph.vertices = [] }
+    if (!this.graph.edges) { this.graph.edges = {} }
+    (vertices || []).forEach(newVertex => {
+      const existing = this.graph.vertices.find(vertex => vertex.token.id === newVertex.token.id)
+      if (!existing) {
+        this.graph.vertices.push(newVertex)
+        this.graph.edges[newVertex.token.id] = this.getDependencyTokenIds(newVertex.provider)
+      }
+    })
   }
 
   /**
@@ -97,16 +101,6 @@ export class Injector {
     }
     sorted[currentSortedIndex] = currentId
     return currentSortedIndex + 1
-  }
-
-  private populateGraph(providers: Provider[]) {
-    this.graph.vertices = providers.map(provider => new ProviderVertex(provider))
-    this.createEdges()
-  }
-
-  private createEdges(): void {
-    this.graph.vertices.forEach(vertex =>
-      this.graph.edges[vertex.token.id] = this.getDependencyTokenIds(vertex.provider))
   }
 
   private getDependencyTokenIds(provider: Provider): string[] {
