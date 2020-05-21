@@ -1,14 +1,19 @@
 {
   "name": "cewdi",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Custom Elements with dependency injection",
   "keywords": [
+    "web components",
     "custom elements",
     "dependency injection",
     "ioc"
   ],
   "author": "Ryan Ferguson",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rferg/cewdi"
+  },
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "files": [
@@ -20,7 +25,9 @@
     "lint": "tslint --format stylish --project tsconfig.json",
     "prepublishOnly": "npm run lint && karma start --single-run && npm run build"
   },
-  "dependencies": {},
+  "dependencies": {
+    "tslib": "^2.0.0"
+  },
   "devDependencies": {
     "@types/jasmine": "^3.5.10",
     "jasmine-core": "^3.5.0",
