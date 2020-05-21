@@ -63,6 +63,15 @@ class OtherRootDependentService {
 }
 
 @Injectable()
+class OtherOtherRootDependentService {
+  constructor(private readonly rootService: RootService) {}
+
+  getRootString(): string {
+    return this.rootService.getRootString()
+  }
+}
+
+@Injectable()
 class OtherRootDependentDependentService {
   constructor(private readonly dep: OtherRootDependentService) {}
 
@@ -91,6 +100,17 @@ class OtherElement extends HTMLElement {
 
   connectedCallback() {
     this.setAttribute(testAttribute, this.otherRootDep.getInjectedValue())
+  }
+}
+
+@Injectable()
+class OtherOtherElement extends HTMLElement {
+  constructor(private readonly otherOtherRootDependent: OtherOtherRootDependentService) {
+    super()
+  }
+
+  connectedCallback() {
+    this.setAttribute(testAttribute, this.otherOtherRootDependent.getRootString())
   }
 }
 
@@ -227,6 +247,64 @@ describe('Integration:Simple', () => {
           new ClassTypeToken(OtherRootDependentDependentService))
 
         expect(grandchildEl.getAttribute(testAttribute)).toBe(service.getInjectedValue())
+      })
+    })
+
+    describe('Branched', () => {
+      let rootContainer: InjectionContainer
+      const injectedValueObjectProvider = new ExplicitProvider(injectedValueObjectToken, { value: 'INJECTED_VALUE' })
+
+      beforeAll(() => {
+        const rootProviders: Provider[] = [
+          RootService,
+          RootDependentService
+        ]
+        rootContainer = InjectionContainer.create(rootProviders)
+      })
+
+      it('should resolve dependencies and create root element and elements from two child branches', () => {
+        const firstBranchProviders: Provider[] = [
+          OtherRootDependentService,
+          injectedValueObjectProvider
+        ]
+        const firstBranchContainer = rootContainer.createChildContainer(firstBranchProviders)
+
+        const secondBranchProviders: Provider[] = [
+          OtherOtherRootDependentService
+        ]
+        const secondBranchContainer = rootContainer.createChildContainer(secondBranchProviders)
+
+        const firstBranchRegistrar = new ElementRegistrar(firstBranchContainer)
+        const secondBranchRegistrar = new ElementRegistrar(secondBranchContainer)
+
+        firstBranchRegistrar.register(
+          {
+            element: RootElement,
+            name: 'root-element-first-branch'
+          },
+          {
+            element: OtherElement,
+            name: 'other-element-first-branch'
+          }
+        )
+
+        secondBranchRegistrar.register({ element: OtherOtherElement, name: 'other-other-element-second-branch' })
+
+        const rootEl = document.createElement('root-element-first-branch')
+        const otherEl = document.createElement('other-element-first-branch')
+        const otherOtherEl = document.createElement('other-other-element-second-branch')
+        document.body.appendChild(rootEl)
+        document.body.appendChild(otherEl)
+        document.body.appendChild(otherOtherEl)
+
+        // RootService should be resolvable by child branch
+        const rootService = secondBranchContainer.resolve<RootService>(new ClassTypeToken(RootService))
+        const rootString = rootService.getRootString()
+
+        expect(rootEl.getAttribute(testAttribute)).toBe(rootString)
+        expect(otherEl.getAttribute(testAttribute))
+          .toBe((injectedValueObjectProvider.value as InjectedValueObject).value)
+        expect(otherOtherEl.getAttribute(testAttribute)).toBe(rootString)
       })
     })
   })
