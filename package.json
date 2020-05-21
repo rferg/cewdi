@@ -21,9 +21,10 @@
   ],
   "scripts": {
     "test": "npm run lint && karma start --auto-watch",
+    "test:single": "npm run lint && karma start --single-run",
     "build": "tsc",
     "lint": "tslint --format stylish --project tsconfig.json",
-    "prepublishOnly": "npm run lint && karma start --single-run && npm run build"
+    "prepublishOnly": "npm run test:single && npm run build"
   },
   "dependencies": {
     "tslib": "^2.0.0"
