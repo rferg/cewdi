@@ -1,6 +1,6 @@
 {
   "name": "cewdi",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Custom Elements with dependency injection",
   "keywords": [
     "web components",
