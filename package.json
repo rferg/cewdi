@@ -22,7 +22,7 @@
   "scripts": {
     "test": "npm run lint && karma start --auto-watch",
     "test:single": "npm run lint && karma start --single-run",
-    "build": "tsc",
+    "build": "tsc --project tsconfig.build.json",
     "lint": "tslint --format stylish --project tsconfig.json",
     "prepublishOnly": "npm run test:single && npm run build"
   },
